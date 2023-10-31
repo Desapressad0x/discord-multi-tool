@@ -42,7 +42,7 @@ function carregarToken() {
       ]);
     return buffer.toString().trim();
   } else {
-	return null;
+    return null;
   }
 }
 
