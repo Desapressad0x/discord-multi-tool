@@ -63,7 +63,7 @@ function printar_uso() {
   console.log(`
 Discord multi-tool 1.0 by Desapressado (2023)
 
-Uso: node ${__filename.split('\\').pop()} [-d delay] (-t token | -e email -s senha) id
+Uso: node ${__filename.split('\\').pop()} [-d delay] (-t token) id
 
   -d        Personaliza o delay de remoção em segundos (padrão: 1)
   -t        Token de autorização da sua conta Discord
@@ -97,7 +97,7 @@ async function parse_argv(args) {
  
   if(!id) {
     printar_uso();
-	process.exit(1);
+    process.exit(1);
   }
 
   const token_config = carregarToken();
@@ -108,7 +108,7 @@ async function parse_argv(args) {
   
   if (!token) {
     console.log("Token não foi encontrada em log e não foi fornecida por comando.")
-	process.exit(1);
+    process.exit(1);
   }
 
   await clear(id, delay, token);
