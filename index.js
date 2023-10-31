@@ -46,7 +46,6 @@ function carregarToken() {
   }
 }
 
-
 /**
  * @param {string} canal - ID do canal a ser buscado.
  * @returns {Promise<object[]>} - Retorna uma lista das suas mensagens no canal especificado.
