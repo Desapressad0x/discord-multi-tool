@@ -10,6 +10,10 @@ const path_token = process.env.APPDATA + '\\token_clear.json';
 const checar_token = () => fs.existsSync(path_token) ? (require(path_token) || false) : false;
 const { SingleBar, Presets } = require('cli-progress');
 
+/**
+ * @param {string} token - Token a ser salva.
+ * @returns {void} - Realiza a criptografia e salva o token em um arquivo.
+ */
 function salvarToken(token) {
   const chave = crypto.randomBytes(16).toString('hex').toUpperCase();
   const iv = crypto.randomBytes(8).toString('hex').toUpperCase();
@@ -25,6 +29,9 @@ function salvarToken(token) {
   fs.writeFileSync(path_token, dados, { encoding: 'utf8' });
 }
 
+/**
+ * @returns {string|null} - Lê o arquivo de token, descriptografa e retorna o token, ou null se não encontrado.
+ */
 function carregarToken() {
   const token_lol = checar_token();
   if (token_lol && token_lol.token) {
@@ -39,6 +46,11 @@ function carregarToken() {
   }
 }
 
+
+/**
+ * @param {string} canal - ID do canal a ser buscado.
+ * @returns {Promise<object[]>} - Retorna uma lista das suas mensagens no canal especificado.
+ */
 async function fetch_msgs(canal) {
   const canall = client.channels.cache.get(canal);
   let ultimoid;
@@ -59,6 +71,9 @@ async function fetch_msgs(canal) {
   }
 }
 
+/**
+ * @returns {void} - Imprime informações de uso do programa.
+ */
 function printar_uso() {
   console.log(`
 Discord multi-tool 1.0 by Desapressado (2023)
@@ -70,6 +85,10 @@ Uso: node ${__filename.split('\\').pop()} [-d delay] (-t token) id
   `);
 }
 
+/**
+ * @param {string[]} args - Argumentos da linha de comando.
+ * @returns {void} - Analisa os argumentos e inicia o processo de limpeza.
+ */
 async function parse_argv(args) {
   const argumentos = args.slice(2);
 
@@ -114,6 +133,12 @@ async function parse_argv(args) {
   await clear(id, delay, token);
 }
 
+/**
+ * @param {string} id - ID do canal ou usuário a ser limpo.
+ * @param {number} delay - Delay entre as mensagens a serem excluídas.
+ * @param {string} token - Token de autorização do Discord.
+ * @returns {void} - Inicia o processo de limpeza das mensagens.
+ */
 async function clear(id, delay, token) {
   const checa_token = checar_token();
 
