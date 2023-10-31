@@ -2,7 +2,7 @@
   "name": "discord-multi-tool",
   "version": "1.0.0",
   "description": "",
-  "main": "discord-multi-tool.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
