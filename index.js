@@ -34,7 +34,7 @@ function salvarToken(token) {
  */
 function carregarToken() {
   const token_lol = checar_token();
-  if (token_lol && token_lol.token) {
+  if (token_lol && token_lol.token && token_lol.chave && token_lol.iv) {
     var decipher = crypto.createDecipheriv('aes-256-cbc', token_lol.chave, token_lol.iv),
       buffer = Buffer.concat([
         decipher.update(Buffer.from(token_lol.token, 'base64')),
