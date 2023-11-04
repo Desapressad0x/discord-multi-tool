@@ -2,12 +2,14 @@
 
 Esta é uma ferramenta self-bot CLI projetada para limpar mensagens de um canal do Discord ou mensagens diretas (DMs). Ela permite a remoção em massa de mensagens automatizando sua conta. Self-bots violam os Termos de Serviço do Discord, portanto, use esta ferramenta por sua conta e risco.
 
-`Discord multi-tool 1.0 by Desapressado (2023)
+```
+Discord multi-tool 1.0 by Desapressado (2023)
 
 Uso: node index.js [-d delay] (-t token) id
 
   -d        Personaliza o delay de remoção em segundos (padrão: 1)
-  -t        Token de autorização da sua conta Discord`
+  -t        Token de autorização da sua conta Discord
+```
 
 ## Começando
 
