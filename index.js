@@ -38,12 +38,18 @@ function salvarToken(token) {
 function carregarToken() {
   const token_lol = checar_token();
   if (token_lol && token_lol.token && token_lol.chave && token_lol.iv) {
-    var decipher = crypto.createDecipheriv('aes-256-cbc', token_lol.chave, token_lol.iv),
+    try {
+      var decipher = crypto.createDecipheriv('aes-256-cbc', token_lol.chave, token_lol.iv),
       buffer = Buffer.concat([
         decipher.update(Buffer.from(token_lol.token, 'base64')),
         decipher.final()
       ]);
-    return buffer.toString().trim();
+    
+      return buffer.toString().trim();
+    } catch {
+      fs.unlinkSync(path_token);
+      return null;
+    }
   } else {
     return null;
   }
