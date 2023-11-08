@@ -95,8 +95,6 @@ async function parse_argv(args) {
 
   let id;
   let token;
-  let email;
-  let senha;
   let delay = 1000;
 
   for (let i = 0; i < argumentos.length; i++) {
