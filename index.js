@@ -33,7 +33,7 @@ function salvarToken(token) {
 }
 
 /**
- * @returns {string|null} - Lê o arquivo de token, descriptografa e retorna o token, ou null se não encontrado.
+ * @returns {string|null} - Lê o arquivo de token, descriptografa e retorna o token, ou o arquivo é apagado e null é retornado se não encontrado.
  */
 function carregarToken() {
   const token_lol = checar_token();
