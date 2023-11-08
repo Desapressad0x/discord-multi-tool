@@ -77,7 +77,7 @@ function printar_uso() {
   console.log(`
 Discord multi-tool 1.0 by Desapressado (2023)
 
-Uso: node ${__filename.split('\\').pop()} [-d delay] (-t token) id
+Uso: node ${require('path').basename(__filename)} [-d delay] (-t token) id
 
   -d        Personaliza o delay de remoção em segundos (padrão: 1)
   -t        Token de autorização da sua conta Discord
