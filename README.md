@@ -46,7 +46,7 @@ Antes de usar a ferramenta, você precisa fornecer seu token do Discord.
 
 2. **Limpeza de Mensagens:**
 
-   Ao usar a ferramente pela primeira vez, a sua token é salva na pasta `%HOMEDIR%`(Windows), `/home/user`(Linux) e `/Users/user`(macOS) do seu sistema num arquivo `token_clear.json` de forma criptografada, então você poderá executar pela segunda vez sem inserir a token dessa forma:
+   Ao usar a ferramente pela primeira vez, a sua token é salva na pasta `%HOMEPATH%`(Windows), `/home/user`(Linux) e `/Users/user`(macOS) do seu sistema num arquivo `token_clear.json` de forma criptografada, então você poderá executar pela segunda vez sem inserir a token dessa forma:
 
    ```bash
    node index.js CANAL_OU_ID_DO_USUÁRIO
