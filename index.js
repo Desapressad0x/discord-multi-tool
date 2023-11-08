@@ -5,6 +5,7 @@ const Discord = require('discord.js-selfbot-v13');
 const client = new Discord.Client({ checkUpdate: false });
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 const os = require('os');
 const crypto = require('crypto');
 
@@ -73,16 +74,53 @@ async function fetch_msgs(canal) {
 }
 
 /**
+ * @param {string} token - Token de autorização do Discord.
+ * @returns {Promise<Array>} - Uma promessa que será resolvida com um array de relacionamentos da conta.
+ */
+async function pegar_relac(token) {
+  const args = {
+    hostname: 'discord.com',
+    path: '/api/v9/users/@me/relationships',
+    method: 'GET',
+    headers: {
+      'Authorization': token,
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
+      'X-Super-Properties': 'eyJvcyI6IldpbmRvd3MiLCJicm93c2vyIjoiq2hyb21liwizgv2awnlijoiisiwic3lzdgvtx2xvzy2fszsi6inb0lujsiwibnjvd3nlcl91czvyx2fnzw50ijoin96awxsys81ljiw (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) chrome/110.0.0.0 safari/537.36',
+      'Referer': 'https://discord.com/channels/@me'
+    }
+  };
+
+  return new Promise((resolve, reject) => {
+    const req = https.request(args, (res) => {
+      let data = '';
+
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => {
+        resolve(JSON.parse(data));
+      });
+    });
+
+    req.on('error', reject);
+    req.end();
+  });
+}
+
+/**
  * @returns {void} - Imprime informações de uso do programa.
  */
 function printar_uso() {
   console.log(`
 Discord multi-tool 1.0 by Desapressado (2023)
 
-Uso: node ${path.basename(__filename)} [-d delay] (-t token) id
+Uso: node ${path.basename(__filename)} [-d delay] [--remover-amigos] [-t token] [-i id]
 
-  -d        Personaliza o delay de remoção em segundos (padrão: 1)
-  -t        Token de autorização da sua conta Discord
+  -d                Personaliza o delay de remoção em segundos (padrão: 1)
+  -t                Token de autorização da sua conta Discord
+  -i                ID para operação específica
+  --remover-amigos  Remove todos os amigos da sua conta
   `);
 }
 
@@ -96,6 +134,7 @@ async function parse_argv(args) {
   let id;
   let token;
   let delay = 1000;
+  let remover_amigos = false;
 
   for (let i = 0; i < argumentos.length; i++) {
     switch (argumentos[i]) {
@@ -108,16 +147,15 @@ async function parse_argv(args) {
       case '-t':
         token = argumentos[i + 1];
         break;
+	    case '--remover-amigos':
+	      remover_amigos = true;
+		    break;
+	    case '-i':
+	      id = argumentos[i + 1];
+		    break;
     }
   }
-
-  id = argumentos[argumentos.length - 1];
- 
-  if(!id) {
-    printar_uso();
-    process.exit(1);
-  }
-
+  
   const token_config = carregarToken();
 
   if (token_config) {
@@ -125,11 +163,78 @@ async function parse_argv(args) {
   }
   
   if (!token) {
-    console.log("Token não foi encontrada em log e não foi fornecida por comando.")
+	printar_uso();
     process.exit(1);
   }
+  
+  if(remover_amigos) {
+	await removerAmigos(delay, token);
+  }
+  
+  if(id) {
+	await clear(id, delay, token);
+  } else if(!remover_amigos){
+	printar_uso();
+	process.exit(1);
+  }
+}
 
-  await clear(id, delay, token);
+/**
+ * @param {string} token - Token de autorização do Discord.
+ * @returns {void} - Inicia o processo de remoção das amizades.
+ */
+async function removerAmigos(delay, token) {
+ const checa_token = checar_token();
+	
+ if (checa_token) {
+    try {
+      await client.login(carregarToken());
+    } catch {
+      console.clear();
+      console.log("           \u001b[41mToken salva em log é inválida, rode o programa novamente.\u001b[0m");
+      fs.unlinkSync(path_token);
+      process.exit(1);
+    }
+ } else {
+    await client.login(token).then(() => {
+      salvarToken(token);
+    }).catch(() => {
+      console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
+      process.exit(1);
+    });
+ }	
+	
+ const amigos = (await pegar_relac(client.token)).filter(r => r.type === 1);
+ 
+ console.clear();
+ console.log(`\x1b[33m
+                    ____  _       __              __
+   ____ ___  __  __/ / /_(_)     / /_____  ____  / /
+  / __ \`__ \\/ / / / / __/ /_____/ __/ __ \\/ __ \\/ /
+ / / / / / / /_/ / / /_/ /_____/ /_/ /_/ / /_/ / /
+/_/ /_/ /_/\\__,_/_/\\__/_/      \\__/\\____/\\____/_/
+
+                                             \x1b[97mv1.0
+ `);
+ console.log();
+
+ const progresso = new SingleBar({
+    format: '\u001b[35m[{bar}] {percentage}%\u001b[0m | {value}/{total} amizades restantes',
+    barCompleteChar: '\u2588',
+    barIncompleteChar: '\u2591',
+    hideCursor: true,
+  }, Presets.shades_classic);
+
+ progresso.start(amigos.length, 0);
+
+ for (let i = 0; i < amigos.length; i++) {
+    const amg = await client.users.fetch(amigos[i].id);
+    await new Promise(r => setTimeout(r, delay));
+    await amg.unFriend().catch(() => {});
+    progresso.update(i + 1);
+  }
+
+ progresso.stop();
 }
 
 /**
@@ -146,7 +251,7 @@ async function clear(id, delay, token) {
       await client.login(carregarToken());
     } catch {
       console.clear();
-      console.log("Token salva em log é inválida, rode o programa novamente.");
+      console.log("           \u001b[41mToken salva em log é inválida, rode o programa novamente.\u001b[0m");
       fs.unlinkSync(path_token);
       process.exit(1);
     }
@@ -154,7 +259,7 @@ async function clear(id, delay, token) {
     await client.login(token).then(() => {
       salvarToken(token);
     }).catch(() => {
-      console.log("Token fornecida é inválida, saindo...");
+      console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
       process.exit(1);
     });
   }
@@ -164,19 +269,20 @@ async function clear(id, delay, token) {
   if (!canal) {
     let user = await client.users.fetch(id).catch(() => {
       console.clear();
-      console.log("ID fornecido é inválido, saindo...");
+      console.log("           \u001b[41mID fornecido é inválido, saindo...\u001b[0m");
       process.exit(1);
     })
 
     await user?.createDM().then(c => id = c.id).catch(() => {
       console.clear();
-      console.log("Não foi possível abrir DM com o usuário, saindo...");
+      console.log("           \u001b[41mNão foi possível abrir DM com o usuário, saindo...\u001b[0m");
       process.exit(1);
     });
   }
 
   const msgs = await fetch_msgs(id);
 
+  console.clear();
   console.log(`\x1b[33m
                     ____  _       __              __
    ____ ___  __  __/ / /_(_)     / /_____  ____  / /
