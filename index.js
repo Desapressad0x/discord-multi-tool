@@ -147,12 +147,12 @@ async function parse_argv(args) {
       case '-t':
         token = argumentos[i + 1];
         break;
-	    case '--remover-amigos':
-	      remover_amigos = true;
-		    break;
-	    case '-i':
-	      id = argumentos[i + 1];
-		    break;
+      case '--remover-amigos':
+	remover_amigos = true;
+        break;
+      case '-i':
+	id = argumentos[i + 1];
+	break;
     }
   }
   
@@ -163,19 +163,19 @@ async function parse_argv(args) {
   }
   
   if (!token) {
-	printar_uso();
+    printar_uso();
     process.exit(1);
   }
   
   if(remover_amigos) {
-	await removerAmigos(delay, token);
+    await removerAmigos(delay, token);
   }
   
   if(id) {
-	await clear(id, delay, token);
+    await clear(id, delay, token);
   } else if(!remover_amigos){
-	printar_uso();
-	process.exit(1);
+    printar_uso();
+   process.exit(1);
   }
 }
 
