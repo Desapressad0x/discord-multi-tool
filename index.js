@@ -4,9 +4,11 @@ process.title = 'Discord Multi-tool 1.0';
 const Discord = require('discord.js-selfbot-v13');
 const client = new Discord.Client({ checkUpdate: false });
 const fs = require('fs');
+const path = require('path');
+const os = require('os');
 const crypto = require('crypto');
 
-const path_token = process.env.APPDATA + '\\token_clear.json';
+const path_token = path.join(os.homedir(), 'token_clear.json');
 const checar_token = () => fs.existsSync(path_token) ? (require(path_token) || false) : false;
 const { SingleBar, Presets } = require('cli-progress');
 
@@ -77,7 +79,7 @@ function printar_uso() {
   console.log(`
 Discord multi-tool 1.0 by Desapressado (2023)
 
-Uso: node ${require('path').basename(__filename)} [-d delay] (-t token) id
+Uso: node ${path.basename(__filename)} [-d delay] (-t token) id
 
   -d        Personaliza o delay de remoção em segundos (padrão: 1)
   -t        Token de autorização da sua conta Discord
