@@ -5,10 +5,12 @@ Esta é uma ferramenta self-bot CLI projetada para limpar mensagens de um canal 
 ```
 Discord multi-tool 1.0 by Desapressado (2023)
 
-Uso: node index.js [-d delay] (-t token) id
+Uso: node index.js [-d delay] [--remover-amigos] [-t token] [-i id]
 
-  -d        Personaliza o delay de remoção em segundos (padrão: 1)
-  -t        Token de autorização da sua conta Discord
+  -d                Personaliza o delay de remoção em segundos (padrão: 1)
+  -t                Token de autorização da sua conta Discord
+  -i                ID para operação específica
+  --remover-amigos  Remove todos os amigos da sua conta
 ```
 
 ## Começando
@@ -63,6 +65,18 @@ Antes de usar a ferramenta, você precisa fornecer seu token do Discord.
    ```
 
    Substitua `ATRASO_EM_SEGUNDOS` pelo atraso desejado e `CANAL_OU_ID_DO_USUÁRIO` pelo ID do canal ou usuário do qual você deseja limpar as mensagens.
+
+4. **Remoção de Amigos**
+
+   Você pode usar a opção `--remover-amigos` para remover todos os amigos da sua conta Discord. Isso é útil se você deseja limpar sua lista de amigos de forma rápida.
+
+   Esta opção não requer a especificação de um canal ou ID de usuário, uma vez que ela se aplica a toda a sua lista de amigos no Discord, mas você ainda pode especificar o delay.
+
+  ```bash
+    node index.js -d 1 -t SEU_TOKEN_DO_DISCORD --remover-amigos
+  ```
+
+  Substitua `SEU_TOKEN_DO_DISCORD` pelo seu token do Discord
 
 ## Aviso Legal
 
