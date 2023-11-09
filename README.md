@@ -1,6 +1,6 @@
 # Discord multi-tool 2.0
 
-Esta é uma ferramenta self-bot CLI projetada para limpar mensagens de um canal do Discord ou mensagens diretas (DMs). Ela permite a remoção em massa de mensagens automatizando sua conta. Self-bots violam os Termos de Serviço do Discord, portanto, use esta ferramenta por sua conta e risco.
+Esta é uma ferramenta self-bot CLI projetada para facilitar sua vida no Discord em alguns meios, como remoção de mensagens em algum canal ou com algum usuário, limpeza da lista de amigos e etc.
 
 ```
 Discord multi-tool 2.0 by Desapressado (2023)
