@@ -1,5 +1,5 @@
 console.clear();
-process.title = 'Discord Multi-tool 2.0';
+process.title = 'Discord multi-tool 2.0';
 
 const Discord = require('discord.js-selfbot-v13');
 const client = new Discord.Client({ checkUpdate: false });
