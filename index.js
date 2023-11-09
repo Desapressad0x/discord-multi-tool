@@ -161,10 +161,11 @@ async function parse_argv(args) {
     }
   }
   
-  const token_config = carregarToken();
-
-  if (token_config) {
-    token = token_config;
+  if (!token) {
+    const token_config = carregarToken();
+    if (token_config) {
+      token = token_config;
+    }
   }
   
   if (!token) {
