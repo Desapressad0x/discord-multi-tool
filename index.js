@@ -1,5 +1,5 @@
 console.clear();
-process.title = 'Discord Multi-tool 1.0';
+process.title = 'Discord Multi-tool 2.0';
 
 const Discord = require('discord.js-selfbot-v13');
 const client = new Discord.Client({ checkUpdate: false });
@@ -11,7 +11,6 @@ const crypto = require('crypto');
 
 const path_token = path.join(os.homedir(), 'token_clear.json');
 const checar_token = () => fs.existsSync(path_token) ? (require(path_token) || false) : false;
-const { SingleBar, Presets } = require('cli-progress');
 
 /**
  * @param {string} token - Token a ser salva.
@@ -33,23 +32,23 @@ function salvarToken(token) {
 }
 
 /**
- * @returns {string|null} - Lê o arquivo de token, descriptografa e retorna o token, ou o arquivo é apagado e null é retornado se não encontrado.
+ * @returns {string|null} - Lê o arquivo de token, descriptografa e retorna o token, ou null se não encontrado.
  */
 function carregarToken() {
   const token_lol = checar_token();
   if (token_lol && token_lol.token && token_lol.chave && token_lol.iv) {
-    try {
+	try {
       var decipher = crypto.createDecipheriv('aes-256-cbc', token_lol.chave, token_lol.iv),
       buffer = Buffer.concat([
         decipher.update(Buffer.from(token_lol.token, 'base64')),
         decipher.final()
       ]);
     
-      return buffer.toString().trim();
-    } catch {
-      fs.unlinkSync(path_token);
-      return null;
-    }
+	  return buffer.toString().trim();
+	} catch {
+	  fs.unlinkSync(path_token);
+	  return null;
+	}
   } else {
     return null;
   }
@@ -119,7 +118,7 @@ async function pegar_relac(token) {
  */
 function printar_uso() {
   console.log(`
-Discord multi-tool 1.0 by Desapressado (2023)
+Discord multi-tool 2.0 by Desapressado (2023)
 
 Uso: node ${path.basename(__filename)} [-d delay] [--remover-amigos] [-t token] [-i id]
 
@@ -180,7 +179,7 @@ async function parse_argv(args) {
   if(id) {
     await clear(id, delay, token);
   } else if(!remover_amigos){
-    printar_uso();
+   printar_uso();
    process.exit(1);
   }
 }
@@ -190,9 +189,9 @@ async function parse_argv(args) {
  * @returns {void} - Inicia o processo de remoção das amizades.
  */
 async function removerAmigos(delay, token) {
- const checa_token = checar_token();
-	
- if (checa_token) {
+  const checa_token = checar_token();
+
+  if (checa_token) {
     try {
       await client.login(carregarToken());
     } catch {
@@ -201,46 +200,38 @@ async function removerAmigos(delay, token) {
       fs.unlinkSync(path_token);
       process.exit(1);
     }
- } else {
+  } else {
     await client.login(token).then(() => {
       salvarToken(token);
     }).catch(() => {
       console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
       process.exit(1);
     });
- }	
+  }
+
+  const amigos = (await pegar_relac(client.token)).filter(r => r.type === 1);
+
+  for (let i = 0; i < amigos.length; i++) {
+    const amg = await client.users.fetch(amigos[i].id);
+    await new Promise(r => setTimeout(r, delay));
+    await amg.unFriend().catch(() => {});
+
+    const porcentagem = ((i + 1) / amigos.length) * 100;
+    const progresso = '[' + '█'.repeat(Math.floor(porcentagem / 2)) + ' '.repeat(50 - Math.floor(porcentagem / 2)) + ']';
 	
- const amigos = (await pegar_relac(client.token)).filter(r => r.type === 1);
- 
- console.clear();
- console.log(`\x1b[33m
+    console.clear();
+    console.log(`\x1b[33m
                     ____  _       __              __
    ____ ___  __  __/ / /_(_)     / /_____  ____  / /
   / __ \`__ \\/ / / / / __/ /_____/ __/ __ \\/ __ \\/ /
  / / / / / / /_/ / / /_/ /_____/ /_/ /_/ / /_/ / /
 /_/ /_/ /_/\\__,_/_/\\__/_/      \\__/\\____/\\____/_/
 
-                                             \x1b[97mv1.0
+                                             \x1b[97mv2.0
  `);
- console.log();
-
- const progresso = new SingleBar({
-    format: '\u001b[35m[{bar}] {percentage}%\u001b[0m | {value}/{total} amizades restantes',
-    barCompleteChar: '\u2588',
-    barIncompleteChar: '\u2591',
-    hideCursor: true,
-  }, Presets.shades_classic);
-
- progresso.start(amigos.length, 0);
-
- for (let i = 0; i < amigos.length; i++) {
-    const amg = await client.users.fetch(amigos[i].id);
-    await new Promise(r => setTimeout(r, delay));
-    await amg.unFriend().catch(() => {});
-    progresso.update(i + 1);
+    console.log();
+    console.log(`\u001b[35m${progresso}\u001b[0m | ${porcentagem.toFixed(2)}% | ${i + 1}/${amigos.length} amizades restantes`);
   }
-
- progresso.stop();
 }
 
 /**
@@ -288,36 +279,28 @@ async function clear(id, delay, token) {
 
   const msgs = await fetch_msgs(id);
 
-  console.clear();
-  console.log(`\x1b[33m
+  for (let i = 0; i < msgs.length; i++) {
+    const msg = msgs[i];
+    await new Promise(r => setTimeout(r, delay));
+    await msg.delete().catch(() => {});
+
+    const porcentagem = ((i + 1) / msgs.length) * 100;
+    const progresso = '[' + '█'.repeat(Math.floor(porcentagem / 2)) + ' '.repeat(50 - Math.floor(porcentagem / 2)) + ']';
+	
+	console.clear();
+	console.log(`\x1b[33m
                     ____  _       __              __
    ____ ___  __  __/ / /_(_)     / /_____  ____  / /
   / __ \`__ \\/ / / / / __/ /_____/ __/ __ \\/ __ \\/ /
  / / / / / / /_/ / / /_/ /_____/ /_/ /_/ / /_/ / /
 /_/ /_/ /_/\\__,_/_/\\__/_/      \\__/\\____/\\____/_/
 
-                                             \x1b[97mv1.0
+                                             \x1b[97mv2.0
  `);
-  console.log();
-
-
-  const progresso = new SingleBar({
-    format: '\u001b[35m[{bar}] {percentage}%\u001b[0m | {value}/{total} mensagens restantes',
-    barCompleteChar: '\u2588',
-    barIncompleteChar: '\u2591',
-    hideCursor: true,
-  }, Presets.shades_classic);
-
-  progresso.start(msgs.length, 0);
-
-  for (let i = 0; i < msgs.length; i++) {
-    const msg = msgs[i];
-    await new Promise(r => setTimeout(r, delay));
-    await msg.delete().catch(() => {});
-    progresso.update(i + 1);
+    console.log();
+    console.log(`\u001b[35m${progresso}\u001b[0m | ${porcentagem.toFixed(2)}% | ${i + 1}/${msgs.length} mensagens restantes`);
   }
 
-  progresso.stop();
   process.exit(0);
 }
 
