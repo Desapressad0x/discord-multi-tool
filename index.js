@@ -320,7 +320,7 @@ async function main() {
     }
   }
   
-  if(!opcoes.token) {
+  if (!opcoes.token) {
     printarUso();
     process.exit(1);
   }
