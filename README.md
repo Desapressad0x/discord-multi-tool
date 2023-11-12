@@ -11,6 +11,8 @@ Uso: node index.js [-d delay] [--remover-amigos] [-t token] [-i id]
   -t                Token de autorização da sua conta Discord
   -i                ID para operação específica
   --remover-amigos  Remove todos os amigos da sua conta
+
+  --help            Imprime informações de uso
 ```
 
 ## Começando
