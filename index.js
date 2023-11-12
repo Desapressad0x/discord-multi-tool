@@ -1,6 +1,3 @@
-console.clear();
-process.title = 'Discord multi-tool 2.0';
-
 const Discord = require('discord.js-selfbot-v13');
 const client = new Discord.Client({ checkUpdate: false });
 const fs = require('fs');
@@ -38,11 +35,11 @@ function carregarToken() {
   const token_lol = checar_token();
   if (token_lol && token_lol.token && token_lol.chave && token_lol.iv) {
 	try {
-          var decipher = crypto.createDecipheriv('aes-256-cbc', token_lol.chave, token_lol.iv),
-          buffer = Buffer.concat([
-            decipher.update(Buffer.from(token_lol.token, 'base64')),
-            decipher.final()
-          ]);
+      var decipher = crypto.createDecipheriv('aes-256-cbc', token_lol.chave, token_lol.iv),
+      buffer = Buffer.concat([
+        decipher.update(Buffer.from(token_lol.token, 'base64')),
+        decipher.final()
+      ]);
     
 	  return buffer.toString().trim();
 	} catch {
@@ -58,7 +55,7 @@ function carregarToken() {
  * @param {string} canal - ID do canal a ser buscado.
  * @returns {Promise<object[]>} - Retorna uma lista das suas mensagens no canal especificado.
  */
-async function fetch_msgs(canal) {
+async function fetchMsgs(canal) {
   const canall = client.channels.cache.get(canal);
   let ultimoid;
   let messages = [];
@@ -82,7 +79,7 @@ async function fetch_msgs(canal) {
  * @param {string} token - Token de autorização do Discord.
  * @returns {Promise<Array>} - Uma promessa que será resolvida com um array de relacionamentos da conta.
  */
-async function pegar_relac(token) {
+async function pegarRelac(token) {
   const args = {
     hostname: 'discord.com',
     path: '/api/v9/users/@me/relationships',
@@ -116,7 +113,7 @@ async function pegar_relac(token) {
 /**
  * @returns {void} - Imprime informações de uso do programa.
  */
-function printar_uso() {
+function printarUso() {
   console.log(`
 Discord multi-tool 2.0 by Desapressado (2023)
 
@@ -126,102 +123,54 @@ Uso: node ${path.basename(__filename)} [-d delay] [--remover-amigos] [-t token] 
   -t                Token de autorização da sua conta Discord
   -i                ID para operação específica
   --remover-amigos  Remove todos os amigos da sua conta
+  
+  --help            Imprime informações de uso
   `);
 }
 
-/**
- * @param {string[]} args - Argumentos da linha de comando.
- * @returns {void} - Analisa os argumentos e inicia o processo de limpeza.
- */
-async function parse_argv(args) {
-  const argumentos = args.slice(2);
-
-  let id;
-  let token;
-  let delay = 1000;
-  let remover_amigos = false;
-
-  for (let i = 0; i < argumentos.length; i++) {
-    switch (argumentos[i]) {
-      case '-d':
-        const valor_delay = parseInt(argumentos[i + 1]);
-        if (!isNaN(valor_delay)) {
-          delay = valor_delay * 1000;
-        }
-        break;
-      case '-t':
-        token = argumentos[i + 1];
-        break;
-      case '--remover-amigos':
-	remover_amigos = true;
-        break;
-      case '-i':
-	id = argumentos[i + 1];
-	break;
-    }
-  }
-  
-  if (!token) {
-    const token_config = carregarToken();
-    if (token_config) {
-      token = token_config;
-    }
-  }
-  
-  if (!token) {
-    printar_uso();
-    process.exit(1);
-  }
-  
-  if(remover_amigos) {
-    await removerAmigos(delay, token);
-  }
-  
-  if(id) {
-    await clear(id, delay, token);
-  } else if(!remover_amigos){
-    printar_uso();
-    process.exit(1);
-  }
-}
 
 /**
  * @param {string} token - Token de autorização do Discord.
  * @returns {void} - Inicia o processo de remoção das amizades.
  */
 async function removerAmigos(delay, token) {
-  const checa_token = checar_token();
-
-  if (checa_token) {
-    try {
-      await client.login(carregarToken());
-    } catch {
-      console.clear();
-      console.log("           \u001b[41mToken salva em log é inválida, rode o programa novamente.\u001b[0m");
-      fs.unlinkSync(path_token);
-      process.exit(1);
-    }
-  } else {
-    await client.login(token).then(() => {
+  await client.login(token).then(() => {
       salvarToken(token);
-    }).catch(() => {
+  }).catch(() => {
       console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
+	  if (carregarToken()) {
+	    fs.unlinkSync(path_token);
+	  }
       process.exit(1);
-    });
-  }
+  });
 
-  const amigos = (await pegar_relac(client.token)).filter(r => r.type === 1);
-
-  for (let i = 0; i < amigos.length; i++) {
-    const amg = await client.users.fetch(amigos[i].id);
-    await new Promise(r => setTimeout(r, delay));
-    await amg.unFriend().catch(() => {});
-
-    const porcentagem = ((i + 1) / amigos.length) * 100;
-    const progresso = '[' + '█'.repeat(Math.floor(porcentagem / 2)) + ' '.repeat(50 - Math.floor(porcentagem / 2)) + ']';
-	
+  const amigos = (await pegarRelac(client.token)).filter(r => r.type === 1);
+  
+  if (!amigos.length) {
     console.clear();
-    console.log(`\x1b[33m
+	console.log(`
+	  \x1b[33m
+                    ____  _       __              __
+   ____ ___  __  __/ / /_(_)     / /_____  ____  / /
+  / __ \`__ \\/ / / / / __/ /_____/ __/ __ \\/ __ \\/ /
+ / / / / / / /_/ / / /_/ /_____/ /_/ /_/ / /_/ / /
+/_/ /_/ /_/\\__,_/_/\\__/_/      \\__/\\____/\\____/_/
+
+                                             \x1b[97mv2.0
+	`);
+    console.log();
+	console.log(`\u001b[35m[                                                  ]\u001b[0m | 0.00% | 0/0 amizades restantes`);
+  } else {
+    for (let i = 0; i < amigos.length; i++) {
+      const amg = await client.users.fetch(amigos[i].id);
+      await new Promise(r => setTimeout(r, delay));
+      await amg.unFriend().catch(() => {});
+
+      const porcentagem = ((i + 1) / amigos.length) * 100;
+      const progresso = '[' + '█'.repeat(Math.floor(porcentagem / 2)) + ' '.repeat(50 - Math.floor(porcentagem / 2)) + ']';
+	
+      console.clear();
+      console.log(`\x1b[33m
                     ____  _       __              __
    ____ ___  __  __/ / /_(_)     / /_____  ____  / /
   / __ \`__ \\/ / / / / __/ /_____/ __/ __ \\/ __ \\/ /
@@ -230,8 +179,9 @@ async function removerAmigos(delay, token) {
 
                                              \x1b[97mv2.0
  `);
-    console.log();
-    console.log(`\u001b[35m${progresso}\u001b[0m | ${porcentagem.toFixed(2)}% | ${i + 1}/${amigos.length} amizades restantes`);
+      console.log();
+      console.log(`\u001b[35m${progresso}\u001b[0m | ${porcentagem.toFixed(2)}% | ${i + 1}/${amigos.length} amizades restantes`);
+    }
   }
 }
 
@@ -241,26 +191,16 @@ async function removerAmigos(delay, token) {
  * @param {string} token - Token de autorização do Discord.
  * @returns {void} - Inicia o processo de limpeza das mensagens.
  */
-async function clear(id, delay, token) {
-  const checa_token = checar_token();
-
-  if (checa_token) {
-    try {
-      await client.login(carregarToken());
-    } catch {
-      console.clear();
-      console.log("           \u001b[41mToken salva em log é inválida, rode o programa novamente.\u001b[0m");
-      fs.unlinkSync(path_token);
-      process.exit(1);
-    }
-  } else {
-    await client.login(token).then(() => {
+async function removerMensagens(id, delay, token) {
+  await client.login(token).then(() => {
       salvarToken(token);
-    }).catch(() => {
+  }).catch(() => {
       console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
+	  if (carregarToken()) {
+	    fs.unlinkSync(path_token);
+	  }
       process.exit(1);
-    });
-  }
+  });
 
   const canal = client.channels.cache.get(id);
 
@@ -278,7 +218,23 @@ async function clear(id, delay, token) {
     });
   }
 
-  const msgs = await fetch_msgs(id);
+  const msgs = await fetchMsgs(id);
+  
+  if (!msgs.length) {
+    console.clear();
+	console.log(`
+	  \x1b[33m
+                    ____  _       __              __
+   ____ ___  __  __/ / /_(_)     / /_____  ____  / /
+  / __ \`__ \\/ / / / / __/ /_____/ __/ __ \\/ __ \\/ /
+ / / / / / / /_/ / / /_/ /_____/ /_/ /_/ / /_/ / /
+/_/ /_/ /_/\\__,_/_/\\__/_/      \\__/\\____/\\____/_/
+
+                                             \x1b[97mv2.0
+	`);
+    console.log();
+	console.log(`\u001b[35m[                                                  ]\u001b[0m | 0.00% | 0/0 mensagens restantes`);
+  } else {
 
   for (let i = 0; i < msgs.length; i++) {
     const msg = msgs[i];
@@ -288,8 +244,8 @@ async function clear(id, delay, token) {
     const porcentagem = ((i + 1) / msgs.length) * 100;
     const progresso = '[' + '█'.repeat(Math.floor(porcentagem / 2)) + ' '.repeat(50 - Math.floor(porcentagem / 2)) + ']';
 	
-    console.clear();
-    console.log(`\x1b[33m
+	console.clear();
+	console.log(`\x1b[33m
                     ____  _       __              __
    ____ ___  __  __/ / /_(_)     / /_____  ____  / /
   / __ \`__ \\/ / / / / __/ /_____/ __/ __ \\/ __ \\/ /
@@ -297,12 +253,88 @@ async function clear(id, delay, token) {
 /_/ /_/ /_/\\__,_/_/\\__/_/      \\__/\\____/\\____/_/
 
                                              \x1b[97mv2.0
-    `);
+ `);
     console.log();
     console.log(`\u001b[35m${progresso}\u001b[0m | ${porcentagem.toFixed(2)}% | ${i + 1}/${msgs.length} mensagens restantes`);
+  }
+ }
+}
+
+/**
+ * @param {string[]} args - Array de argumentos da linha de comando.
+ * @returns {Object} - Object contendo as opções escolhidas.
+ */
+function parseArgs(args) {
+  const opcoes = {
+    help: false,
+    token: null,
+    delay: 1000,
+    removerAmigos: false,
+    clearId: null,
+  };
+
+  for (let i = 0; i < args.length; i++) {
+    switch (args[i]) {
+      case '-d':
+        const delay = parseInt(args[i + 1]);
+        if (!isNaN(delay)) {
+          opcoes.delay = delay * 1000;
+        }
+        break;
+      case '-t':
+        opcoes.token = args[i + 1];
+        break;
+      case '--remover-amigos':
+        opcoes.removerAmigos = true;
+        break;
+      case '-i':
+        opcoes.clearId = args[i + 1];
+        break;
+      case '--help':
+        opcoes.help = true;
+        break;
+    }
+  }
+
+  return opcoes;
+}
+
+/**
+ * @returns {void} - Inicialização das funções da ferramenta e saída com status 0.
+ */
+async function main() {
+  console.clear();
+  process.title = 'Discord multi-tool 2.0';
+
+  const args = process.argv.slice(2);
+  const opcoes = parseArgs(args);
+
+  if (opcoes.help || (!opcoes.removerAmigos && !opcoes.clearId)) {
+    printarUso();
+    process.exit(1);
+  }
+
+  if (!opcoes.token) {
+    const tokenConfig = carregarToken();
+    if (tokenConfig) {
+      opcoes.token = tokenConfig;
+    }
+  }
+  
+  if(!opcoes.token) {
+	printarUso();
+	process.exit(1);
+  }
+
+  if (opcoes.removerAmigos) {
+    await removerAmigos(opcoes.delay, opcoes.token);
+  }
+
+  if (opcoes.clearId) {
+    await removerMensagens(opcoes.clearId, opcoes.delay, opcoes.token);
   }
 
   process.exit(0);
 }
 
-parse_argv(process.argv);
+main();
