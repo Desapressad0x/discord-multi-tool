@@ -134,12 +134,12 @@ Uso: node ${path.basename(__filename)} [-d delay] [--remover-amigos] [-t token] 
  */
 async function removerAmigos(delay, token) {
   await client.login(token).then(() => {
-      salvarToken(token);
+    salvarToken(token);
   }).catch(() => {
       console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
-	  if (carregarToken()) {
-	    fs.unlinkSync(path_token);
-	  }
+      if (carregarToken()) {
+        fs.unlinkSync(path_token);
+      }
       process.exit(1);
   });
 
@@ -147,7 +147,7 @@ async function removerAmigos(delay, token) {
   
   if (!amigos.length) {
     console.clear();
-	console.log(`
+    console.log(`
 	  \x1b[33m
                     ____  _       __              __
    ____ ___  __  __/ / /_(_)     / /_____  ____  / /
@@ -158,7 +158,7 @@ async function removerAmigos(delay, token) {
                                              \x1b[97mv2.0
 	`);
     console.log();
-	console.log(`\u001b[35m[                                                  ]\u001b[0m | 0.00% | 0/0 amizades restantes`);
+    console.log(`\u001b[35m[                                                  ]\u001b[0m | 0.00% | 0/0 amizades restantes`);
   } else {
     for (let i = 0; i < amigos.length; i++) {
       const amg = await client.users.fetch(amigos[i].id);
@@ -192,12 +192,12 @@ async function removerAmigos(delay, token) {
  */
 async function removerMensagens(id, delay, token) {
   await client.login(token).then(() => {
-      salvarToken(token);
+    salvarToken(token);
   }).catch(() => {
       console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
-	  if (carregarToken()) {
-	    fs.unlinkSync(path_token);
-	  }
+      if (carregarToken()) {
+        fs.unlinkSync(path_token);
+      }
       process.exit(1);
   });
 
