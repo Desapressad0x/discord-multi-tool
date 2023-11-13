@@ -322,18 +322,19 @@ async function checarUpdates() {
           data += chunk;
         });
 
+        req.on('error', reject);
+
         res.on('end', () => {
-          resolve(data);
+          if (versao_atual !== JSON.parse(data).version) {
+            console.log("           \u001b[43;30mHá uma atualização disponível, baixe no repositório do GitHub (Desapressad0x).\u001b[0m");
+          }
+          resolve();
         });
       });
 
       req.on('error', reject);
       req.end();
     });
-
-    if (versao_atual !== JSON.parse(data).version) {
-      console.log("           \u001b[43;30mHá uma atualização disponível, baixe no repositório do GitHub(Desapressad0x).\u001b[0m");
-    }
   } catch {}
 }
 
