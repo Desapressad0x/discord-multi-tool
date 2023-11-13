@@ -299,6 +299,45 @@ function parseArgs(args) {
 }
 
 /**
+ * @returns {void} - Notifica sobre a atualização disponível.
+ */
+async function checarUpdates() {
+  const versao_atual = require(path.join(__dirname, 'package.json')).version;
+
+  const args = {
+    hostname: 'raw.githubusercontent.com',
+    path: '/Desapressad0x/discord-multi-tool/main/package.json',
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'
+    }
+  };
+
+  try {
+    const data = await new Promise((resolve, reject) => {
+      const req = https.request(args, (res) => {
+        let data = '';
+
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          resolve(data);
+        });
+      });
+
+      req.on('error', reject);
+      req.end();
+    });
+
+    if (versao_atual !== JSON.parse(data).version) {
+      console.log("           \u001b[43;30mHá uma atualização disponível, baixe no repositório do GitHub(Desapressad0x).\u001b[0m");
+    }
+  } catch {}
+}
+
+/**
  * @returns {void} - Inicialização das funções da ferramenta e saída com status 0.
  */
 async function main() {
@@ -307,6 +346,7 @@ async function main() {
 
   const args = process.argv.slice(2);
   const opcoes = parseArgs(args);
+  await checarUpdates();
 
   if (opcoes.help || (!opcoes.removerAmigos && !opcoes.clearId)) {
     printarUso();
