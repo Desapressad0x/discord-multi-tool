@@ -12,16 +12,16 @@ async function removerAmigos(delay, token) {
       func.salvarToken(token);
   }).catch(() => {
       console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
-	  if (func.carregarToken()) {
-	    fs.unlinkSync(func.path_token);
-	  }
+      if (func.carregarToken()) {
+        fs.unlinkSync(func.path_token);
+      }
       process.exit(1);
   });
 
   const amigos = (await func.pegarRelac(client.token)).filter(r => r.type === 1);
   
   if (!amigos.length) {
-    console.clear();
+        console.clear();
 	console.log(`
 	  \x1b[33m
                     ____  _       __              __
@@ -32,7 +32,7 @@ async function removerAmigos(delay, token) {
 
                                              \x1b[97mv2.0
 	`);
-    console.log();
+        console.log();
 	console.log(`\u001b[35m[                                                  ]\u001b[0m | 0.00% | 0/0 amizades restantes`);
   } else {
     for (let i = 0; i < amigos.length; i++) {
@@ -70,9 +70,9 @@ async function removerMensagens(id, delay, token) {
       func.salvarToken(token);
   }).catch(() => {
       console.log("           \u001b[41mToken fornecida é inválida, saindo...\u001b[0m");
-	  if (func.carregarToken()) {
-	    fs.unlinkSync(func.path_token);
-	  }
+      if (func.carregarToken()) {
+        fs.unlinkSync(func.path_token);
+      }
       process.exit(1);
   });
 
@@ -95,7 +95,7 @@ async function removerMensagens(id, delay, token) {
   const msgs = await func.fetchMsgs(client, id);
   
   if (!msgs.length) {
-      console.clear();
+          console.clear();
 	  console.log(`
 	  \x1b[33m
                     ____  _       __              __
@@ -106,19 +106,19 @@ async function removerMensagens(id, delay, token) {
 
                                              \x1b[97mv2.0
 	`);
-    console.log();
+        console.log();
 	console.log(`\u001b[35m[                                                  ]\u001b[0m | 0.00% | 0/0 mensagens restantes`);
   } else {
-    for (let i = 0; i < msgs.length; i++) {
-      const msg = msgs[i];
-      await new Promise(r => setTimeout(r, delay));
-      await msg.delete().catch(() => {});
+      for (let i = 0; i < msgs.length; i++) {
+        const msg = msgs[i];
+        await new Promise(r => setTimeout(r, delay));
+        await msg.delete().catch(() => {});
 
-      const porcentagem = ((i + 1) / msgs.length) * 100;
-      const progresso = '[' + '█'.repeat(Math.floor(porcentagem / 2)) + ' '.repeat(50 - Math.floor(porcentagem / 2)) + ']';
+        const porcentagem = ((i + 1) / msgs.length) * 100;
+        const progresso = '[' + '█'.repeat(Math.floor(porcentagem / 2)) + ' '.repeat(50 - Math.floor(porcentagem / 2)) + ']';
 	
-	  console.clear();
-	  console.log(`\x1b[33m
+	console.clear();
+	console.log(`\x1b[33m
                     ____  _       __              __
    ____ ___  __  __/ / /_(_)     / /_____  ____  / /
   / __ \`__ \\/ / / / / __/ /_____/ __/ __ \\/ __ \\/ /
@@ -127,9 +127,9 @@ async function removerMensagens(id, delay, token) {
 
                                              \x1b[97mv2.0
  `);
-      console.log();
-      console.log(`\u001b[35m${progresso}\u001b[0m | ${porcentagem.toFixed(2)}% | ${i + 1}/${msgs.length} mensagens restantes`);
-    }
+        console.log();
+        console.log(`\u001b[35m${progresso}\u001b[0m | ${porcentagem.toFixed(2)}% | ${i + 1}/${msgs.length} mensagens restantes`);
+     }
   }
 }
 
@@ -162,8 +162,8 @@ async function main() {
   }
   
   if(!opcoes.token) {
-	func.printarUso();
-  	process.exit(1);
+    func.printarUso();
+    process.exit(1);
   }
 
   if (opcoes.removerAmigos) {
