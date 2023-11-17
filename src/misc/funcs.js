@@ -214,7 +214,7 @@ function parseArgs(args) {
   const opcoes = {
     help: false,
     token: null,
-    delay: 1000,
+    delay: 1100,
     removerAmigos: false,
     clearId: null,
   };
