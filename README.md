@@ -43,7 +43,7 @@ Antes de usar a ferramenta, você precisa fornecer seu token do Discord.
    - Execute a ferramenta usando a opção `-t` e forneça seu token do Discord diretamente.
 
    ```bash
-   node src/index -t SEU_TOKEN_DO_DISCORD CANAL_OU_ID_DO_USUÁRIO
+   node . -t SEU_TOKEN_DO_DISCORD CANAL_OU_ID_DO_USUÁRIO
    ```
 
    Substitua `SEU_TOKEN_DO_DISCORD` pelo seu token do Discord e `CANAL_OU_ID_DO_USUÁRIO` pelo ID do canal ou usuário do qual você deseja limpar as mensagens.
@@ -53,7 +53,7 @@ Antes de usar a ferramenta, você precisa fornecer seu token do Discord.
    Ao usar a ferramente pela primeira vez, a sua token é salva na pasta `%HOMEPATH%` (Windows), `/home/user` (Linux) ou `/Users/user` (macOS) do seu sistema num arquivo `token_clear.json` de forma criptografada, então você poderá executar pela segunda vez sem inserir a token dessa forma:
 
    ```bash
-   node src/index CANAL_OU_ID_DO_USUÁRIO
+   node . CANAL_OU_ID_DO_USUÁRIO
    ```
 
    Substitua `CANAL_OU_ID_DO_USUÁRIO` pelo ID do canal ou usuário do qual você deseja limpar as mensagens.
@@ -63,7 +63,7 @@ Antes de usar a ferramenta, você precisa fornecer seu token do Discord.
    Você pode personalizar o delay entre a exclusão de mensagens usando a opção `-d`. Por padrão, o atraso está definido como 1 segundo.
 
    ```bash
-   node src/index -d ATRASO_EM_SEGUNDOS CANAL_OU_ID_DO_USUÁRIO
+   node . -d ATRASO_EM_SEGUNDOS CANAL_OU_ID_DO_USUÁRIO
    ```
 
    Substitua `ATRASO_EM_SEGUNDOS` pelo atraso desejado e `CANAL_OU_ID_DO_USUÁRIO` pelo ID do canal ou usuário do qual você deseja limpar as mensagens.
@@ -75,7 +75,7 @@ Antes de usar a ferramenta, você precisa fornecer seu token do Discord.
    Esta opção não requer a especificação de um canal ou ID de usuário, uma vez que ela se aplica a toda a sua lista de amigos no Discord, mas você ainda pode especificar o delay.
 
    ```bash
-   node src/index -d 1 -t SEU_TOKEN_DO_DISCORD --remover-amigos
+   node . -d 1 -t SEU_TOKEN_DO_DISCORD --remover-amigos
    ```
 
   Substitua `SEU_TOKEN_DO_DISCORD` pelo seu token do Discord
