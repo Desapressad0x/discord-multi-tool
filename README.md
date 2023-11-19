@@ -78,7 +78,7 @@ Antes de usar a ferramenta, você precisa fornecer seu token do Discord.
    node . -d ATRASO_EM_SEGUNDOS -t SEU_TOKEN_DO_DISCORD --remover-amigos
    ```
 
-  Substitua `ATRASO_EM_SEGUNDOS` pelo atraso desejado e `SEU_TOKEN_DO_DISCORD` pelo seu token do Discord
+   Substitua `ATRASO_EM_SEGUNDOS` pelo atraso desejado e `SEU_TOKEN_DO_DISCORD` pelo seu token do Discord
 
 ## Aviso Legal
 
