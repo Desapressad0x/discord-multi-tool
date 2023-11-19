@@ -75,10 +75,10 @@ Antes de usar a ferramenta, você precisa fornecer seu token do Discord.
    Esta opção não requer a especificação de um canal ou ID de usuário, uma vez que ela se aplica a toda a sua lista de amigos no Discord, mas você ainda pode especificar o delay.
 
    ```bash
-   node . -d 1 -t SEU_TOKEN_DO_DISCORD --remover-amigos
+   node . -d ATRASO_EM_SEGUNDOS -t SEU_TOKEN_DO_DISCORD --remover-amigos
    ```
 
-  Substitua `SEU_TOKEN_DO_DISCORD` pelo seu token do Discord
+  Substitua `ATRASO_EM_SEGUNDOS` pelo atraso desejado e `SEU_TOKEN_DO_DISCORD` pelo seu token do Discord
 
 ## Aviso Legal
 
