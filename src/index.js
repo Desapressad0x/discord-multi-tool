@@ -138,7 +138,7 @@ async function removerMensagens(id, delay, token) {
  */
 async function main() {
   console.clear();
-  process.title = 'Discord multi-tool 2.0';
+  process.platform === 'win32' ? process.title = 'Discord multi-tool 2.0' : process.stdout.write('\x1b]0;Discord multi-tool 2.0\x07');
 
   const args = process.argv.slice(2);
   const opcoes = func.parseArgs(args);
