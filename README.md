@@ -33,7 +33,7 @@ Você precisa ter o Node.js instalado em seu sistema.
    npm install
    ```
 
-   Ou execute o arquivo bat iniciar na pasta do projeto caso esteja no Windows.
+   Ou execute o arquivo bat(Windows) e o arquivo shell(Distros Linux com ambiente GNOME).
 
 ## Uso
 
