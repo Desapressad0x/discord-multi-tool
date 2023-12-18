@@ -25,7 +25,6 @@ if !escolha! equ 1 (
     pause >nul
     goto main
 )
-
 goto :eof
 
 :leigo
