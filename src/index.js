@@ -1,7 +1,27 @@
 const Discord = require('discord.js-selfbot-v13');
-const client = new Discord.Client({ checkUpdate: false });
+const path = require('path');
 const fs = require('fs');
+
+const client = new Discord.Client({ checkUpdate: false });
 const func = require('./misc/funcs.js');
+
+/**
+ * @returns {void} - Imprime informações de uso do programa.
+ */
+function printarUso() {
+  console.log(`
+Discord multi-tool 2.0 by Desapressado (2023)
+
+Uso: node ${path.basename(__filename)} [-d delay] [--remover-amigos] [-t token] [-i id]
+
+  -d                Personaliza o delay de uma ação em segundos (padrão: 1)
+  -t                Token de autorização da sua conta Discord
+  -i                ID para operação específica
+  --remover-amigos  Remove todos os amigos da sua conta
+  
+  --help            Imprime informações de uso
+  `);
+}
 
 /**
  * @param {string} token - Token de autorização do Discord.
@@ -145,7 +165,7 @@ async function main() {
   await func.checarUpdates();
 
   if (opcoes.help || (!opcoes.removerAmigos && !opcoes.clearId)) {
-    func.printarUso();
+    printarUso();
     process.exit(1);
   }
 
