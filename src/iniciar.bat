@@ -30,8 +30,8 @@ goto :eof
 :leigo
 cls
 if not exist "%HOMEPATH%\token_clear.json" (
-  set /p token=Token: 
-  set /p id=ID pra apagar: 
+  set /p "token=Token (cole com o botão direito do mouse): "
+  set /p "id=ID pra apagar (cole com o botão direito do mouse): "
   node . -t !token! -i !id!
   goto :eof
 ) else (
