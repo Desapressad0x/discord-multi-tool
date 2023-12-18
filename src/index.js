@@ -177,7 +177,7 @@ async function main() {
   }
   
   if(!opcoes.token) {
-    func.printarUso();
+    printarUso();
     process.exit(1);
   }
 
