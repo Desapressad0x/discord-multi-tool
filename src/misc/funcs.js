@@ -75,24 +75,6 @@ async function fetchMsgs(client, canal) {
 }
 
 /**
- * @returns {void} - Imprime informações de uso do programa.
- */
-function printarUso() {
-  console.log(`
-Discord multi-tool 2.0 by Desapressado (2023)
-
-Uso: node ${path.basename(__filename)} [-d delay] [--remover-amigos] [-t token] [-i id]
-
-  -d                Personaliza o delay de uma ação em segundos (padrão: 1)
-  -t                Token de autorização da sua conta Discord
-  -i                ID para operação específica
-  --remover-amigos  Remove todos os amigos da sua conta
-  
-  --help            Imprime informações de uso
-  `);
-}
-
-/**
  * @returns {void} - Notifica sobre a atualização disponível.
  */
 async function checarUpdates() {
@@ -245,4 +227,4 @@ function parseArgs(args) {
   return opcoes;
 }
 
-module.exports = { salvarToken, carregarToken, path_token, checar_token, fetchMsgs, printarUso, checarUpdates, parseArgs, pegarRelac, inputSenha };
+module.exports = { salvarToken, carregarToken, path_token, checar_token, fetchMsgs, checarUpdates, parseArgs, pegarRelac, inputSenha };
